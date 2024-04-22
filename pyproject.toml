@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "code-gen"
+version = "0.1.0"
+description = ""
+authors = ["Victor I. Afolabi <javafolabi@gmail.com>"]
+readme = "README.md"
+packages = [{include = "code_gen", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+llama-index = "^0.10.30"
+llama-index-core = "^0.10.30"
+llama-index-readers-file = "^0.1.19"
+llama-index-llms-ollama = "^0.1.2"
+llama-index-embeddings-huggingface = "^0.2.0"
+llama-parse = "^0.4.1"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
