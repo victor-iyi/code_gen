@@ -1,12 +1,13 @@
 from llama_index.llms.ollama import Ollama
 from llama_parse import LlamaParse
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
-from llama_index.core.embeddings import resolve_embed_model
+from llama_index.core import SimpleDirectoryReader
 from llama_index.core.agent import ReActAgent
-from llama_index.core.tools import QueryEngineTool, ToolMetadata
-from code_gen.prompts import context
-from dotenv import load_dotenv
 
+from code_gen.prompts import context
+from code_gen.code_reader import code_reader
+from code_gen.query_engine import query_engine
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -27,27 +28,9 @@ def main() -> None:
         file_extractor=file_extractor,
     ).load_data()
 
-    # Embedding model.
-    embed_model = resolve_embed_model('local:BAAI/bge-m3')
-
-    # Vector DB.
-    vector_index = VectorStoreIndex.from_documents(
-        documents,
-        embed_model=embed_model,
-    )
-    query_engine = vector_index.as_query_engine(llm=llm)
-
-    # result = query_engine.query('what are some of the routes in the api?')
-    # print(result)
-
     tools = [
-        QueryEngineTool(
-            query_engine=query_engine,
-            metadata=ToolMetadata(
-                name='api_documentation',
-                description='this gives documentation about code for an API./ Use this for reading  docs for the API',
-            )
-        ),
+        query_engine(llm, documents),
+        code_reader,
     ]
 
     # For code generation.
