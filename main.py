@@ -1,7 +1,6 @@
-import os
 from llama_index.llms.ollama import Ollama
 from llama_parse import LlamaParse
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, PromptTemplate
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 from llama_index.core.embeddings import resolve_embed_model
 from llama_index.core.agent import ReActAgent
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
@@ -13,7 +12,8 @@ load_dotenv()
 
 
 def main() -> None:
-    llm = Ollama(model='llama2', request_timeout=30.0)
+    # RAG model.
+    llm = Ollama(model='llama2')
     # result = llm.complete('Hello, world')
     # print(result)
 
@@ -27,8 +27,10 @@ def main() -> None:
         file_extractor=file_extractor,
     ).load_data()
 
+    # Embedding model.
     embed_model = resolve_embed_model('local:BAAI/bge-m3')
 
+    # Vector DB.
     vector_index = VectorStoreIndex.from_documents(
         documents,
         embed_model=embed_model,
@@ -48,6 +50,7 @@ def main() -> None:
         ),
     ]
 
+    # For code generation.
     code_llm = Ollama(model='codellama')
     agent = ReActAgent.from_tools(
         tools=tools,
@@ -58,7 +61,7 @@ def main() -> None:
 
     while (prompt := input('Enter a prompt (q to quit): ')) != 'q':
         result = agent.query(prompt)
-        print(f'\n{result}')
+        print(result)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "code-gen"
 version = "0.1.0"
-description = ""
+description = "Code generation using llama-index"
 authors = ["Victor I. Afolabi <javafolabi@gmail.com>"]
 readme = "README.md"
 packages = [{include = "code_gen", from = "src"}]
@@ -20,3 +20,10 @@ python-dotenv = "^1.0.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.pyright]
+reportOptionalCall = "none"
+reportGeneralTypeIssues = "none"
+reportOptionalMemberAccess = "none"
+reportUnboundVariable = "none"
